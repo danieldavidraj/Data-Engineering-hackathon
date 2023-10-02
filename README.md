@@ -11,14 +11,14 @@
 
 
 Sample configuration:
-```console
+```json
 {
     "source": {
         "start_date": "25/07/2017",
         "end_date": "30/07/2017"
-    }',
+    },
     "granularity": "daily",
-    "kpis": '[
+    "kpis": [
         {
             "name": "Users count",
             "sql": "approx_count_distinct(fullVisitorId, 0.03)"
@@ -31,13 +31,13 @@ Sample configuration:
             "name": "Conversion rate",
             "sql": "(sum(totals.transactions)/count(*))*100"
         }
-    ]',
-    "dimensions": '[
+    ],
+    "dimensions": [
         "geoNetwork.country",
         "device.browser",
         "device.deviceCategory",
         "device.operatingSystem"
-    ]',
+    ],
     "depth": 2
 }
 ```
@@ -83,11 +83,11 @@ $ docker-compose up -d --build
 * Airflow connects to Databricks using a Databricks personal access token (PAT).
 
 * The airflow configuration looks like
-```console
+```json
 {
-    conn_id: "databricks_default",
-    host: "https://adb-6168097710450920.0.azuredatabricks.net/",
-    extra_params: {
+    "conn_id": "databricks_default",
+    "host": "https://adb-6168097710450920.0.azuredatabricks.net/",
+    "extra_params": {
         "token": "PERSONAL_ACCESS_TOKEN"
     }
 }
