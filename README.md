@@ -1,5 +1,15 @@
 # Data Engineering Hackathon
 
+### Tools used:
+
+* **Data Source**: Google BigQuery
+* **Data Processing Layer**: Azure Databricks, Apache Airflow
+* **Time Series Output**: PostgreSQL Database
+* **Deploy**: Docker for Airflow and Render for Postgres
+
+<img src="https://skillicons.dev/icons?i=azure,python,postgres,docker" />
+
+
 Sample configuration:
 ```console
 {
@@ -32,24 +42,28 @@ Sample configuration:
 }
 ```
 
-The Databricks connector is utilized to pass the configuration and data source details in the Airflow DAG to run the job on the Spark cluster in Databricks.
+The Databricks connector is utilized to pass the configuration and data source details in the Airflow DAG to run the job on the Databricks cluster.
 
 
-> Checkpoint 1: Data Aggregation and Transformation
+## Checkpoint 1: Data Aggregation and Transformation
 
-dataset: <a href="https://console.cloud.google.com/marketplace/product/obfuscated-ga360-data/obfuscated-ga360-data?project=lexical-script-761" target="_blank">bigquery-public-data.google_analytics_sample</a>
+**dataset:** <a href="https://console.cloud.google.com/marketplace/product/obfuscated-ga360-data/obfuscated-ga360-data?project=lexical-script-761" target="_blank">bigquery-public-data.google_analytics_sample</a>
 
-Azure Databricks Workspace: https://adb-6168097710450920.0.azuredatabricks.net/
+**Azure Databricks Workspace:** https://adb-6168097710450920.0.azuredatabricks.net/
 
 * **BigQuery Storage API** is used to read the BigQuery table into the spark notebook. 
 
-* Aggregate values and aggregation SQL expression provided by the user are calculated using **pyspark sql functions**.
+* Aggregate values and Dimension Cuts are calculated using **pyspark sql functions**.
 
 * The notebook is deployed on **Azure Databricks**. 
 
-> Checkpoint 2: Airflow Pipeline
+## Checkpoint 2: Airflow Pipeline
 
 * **Docker** is used to deploy Airflow.
+
+* The **Databricks connector** is installed on Docker using Dockerfile and docker-compose files.
+
+* **databricks_dag.py** is a DAG created to trigger the databricks notebook job.
 
 ```console
 $ cd <working_dir>
@@ -57,7 +71,12 @@ $ docker-compose up -d --build
 
 ---> 100%
 ```
-* **databricks_dag.py** is a DAG created to trigger the databricks notebook job.
+
+* The transformed data is updated into the postgres database.
+
+![Schema](schema.png)
+
+* The pipeline is scheduled to run at specified intervals
 
 #### Configure Databricks connection
 
@@ -74,11 +93,11 @@ $ docker-compose up -d --build
 }
 ```
 
-> Checkpoint 3: Multi Granularity Support
+## Checkpoint 3: Multi Granularity Support
 
 * The system is flexibe in performing data aggregation and transformations at various granularities. 
 
-* Time intervals
+* Time intervals:
 ```daily``` 
 ```weekly``` 
 ```monthly``` 
